@@ -1,3 +1,26 @@
+// --- Фиксированная иконка меню на мобильном ---
+const navMenu = document.querySelector(".nav__menu");
+const siteHeader = document.querySelector(".site__header");
+
+const handleMenuScroll = () => {
+  // Только на мобильном (до 768px)
+  if (window.innerWidth >= 768) {
+    navMenu.classList.remove("nav__menu--fixed");
+    return;
+  }
+
+  const headerBottom = siteHeader.getBoundingClientRect().bottom;
+
+  if (headerBottom <= 0) {
+    navMenu.classList.add("nav__menu--fixed");
+  } else {
+    navMenu.classList.remove("nav__menu--fixed");
+  }
+};
+
+window.addEventListener("scroll", handleMenuScroll, { passive: true });
+window.addEventListener("resize", handleMenuScroll);
+
 // 1. Установите дату (Год-Месяц-ДеньTЧасы:Минуты:Секунды)
 const targetDate = new Date("2026-09-26T00:00:00").getTime();
 
@@ -166,13 +189,13 @@ const menuOverlay = document.getElementById("menuOverlay");
 const menuClose = document.getElementById("menuClose");
 
 const openMenu = () => {
-    menuOverlay.classList.add("is-open");
-    document.body.classList.add("menu-is-open");
+  menuOverlay.classList.add("is-open");
+  document.body.classList.add("menu-is-open");
 };
 
 const closeMenu = () => {
-    menuOverlay.classList.remove("is-open");
-    document.body.classList.remove("menu-is-open");
+  menuOverlay.classList.remove("is-open");
+  document.body.classList.remove("menu-is-open");
 };
 
 menuToggle.addEventListener("click", openMenu);
@@ -180,12 +203,12 @@ menuClose.addEventListener("click", closeMenu);
 
 // Клик на тёмный фон справа закрывает меню
 menuOverlay.addEventListener("click", (e) => {
-    if (e.target === menuOverlay) closeMenu();
+  if (e.target === menuOverlay) closeMenu();
 });
 
 // Закрытие по Escape
 document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeMenu();
+  if (e.key === "Escape") closeMenu();
 });
 
 // --- Travel слайдер ---
@@ -194,78 +217,459 @@ const travelPrev = document.querySelector(".travel__edge--prev");
 const travelNext = document.querySelector(".travel__edge--next");
 
 if (travelTrack) {
-    const frames = Array.from(travelTrack.querySelectorAll(".travel__frame"));
-    const total = frames.length;
-    let current = 0;
+  const frames = Array.from(travelTrack.querySelectorAll(".travel__frame"));
+  const total = frames.length;
+  let current = 0;
+  let isAnimating = false;
 
-    const getFrameWidth = () => {
-        const frame = frames[0];
-        const style = getComputedStyle(travelTrack);
-        const gap = parseFloat(style.gap) || 16;
-        return frame.offsetWidth + gap;
+  const updateButtons = () => {
+    if (!travelPrev || !travelNext) return;
+    travelPrev.style.visibility = current === 0 ? "hidden" : "visible";
+    travelNext.style.visibility = current === total - 1 ? "hidden" : "visible";
+  };
+
+  const moveTo = (index, animate = true) => {
+    if (index < 0 || index >= total) return;
+    current = index;
+    const offset = frames[current].offsetLeft;
+    travelTrack.style.transition = animate
+      ? "transform 500ms cubic-bezier(0.16, 1, 0.3, 1)"
+      : "none";
+    travelTrack.style.transform = `translateX(-${offset}px)`;
+    updateButtons();
+  };
+
+  travelTrack.addEventListener("transitionend", () => {
+    isAnimating = false;
+  });
+
+  const goNext = () => {
+    if (isAnimating || current >= total - 1) return;
+    isAnimating = true;
+    moveTo(current + 1);
+  };
+
+  const goPrev = () => {
+    if (isAnimating || current <= 0) return;
+    isAnimating = true;
+    moveTo(current - 1);
+  };
+
+  if (travelPrev) travelPrev.addEventListener("click", goPrev);
+  if (travelNext) travelNext.addEventListener("click", goNext);
+  // Свайп для мобильного
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let isSwiping = false;
+  const travelContainer = travelTrack.parentElement;
+
+  travelContainer.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    isSwiping = false;
+  }, { passive: true });
+
+  travelContainer.addEventListener("touchmove", (e) => {
+    const dx = Math.abs(e.touches[0].clientX - touchStartX);
+    const dy = Math.abs(e.touches[0].clientY - touchStartY);
+    if (!isSwiping && dx > dy && dx > 8) {
+      isSwiping = true;
+    }
+    if (isSwiping) e.preventDefault();
+  }, { passive: false });
+
+  travelContainer.addEventListener("touchend", (e) => {
+    if (!isSwiping) return;
+    isSwiping = false;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (dx < -40) goNext();
+    else if (dx > 40) goPrev();
+  });
+
+  window.addEventListener("resize", () => {
+    isAnimating = false;
+    moveTo(current, false);
+  });
+
+  moveTo(0, false);
+}
+
+// --- Coach слайдер ---
+const coachTrack = document.querySelector(".coach__track");
+const coachPrev = document.querySelector(".coach__edge--prev");
+const coachNext = document.querySelector(".coach__edge--next");
+
+if (coachTrack) {
+  const frames = Array.from(coachTrack.querySelectorAll(".coach__frame"));
+  const total = frames.length;
+  let current = 0;
+  let isAnimating = false;
+
+  const updateButtons = () => {
+    if (!coachPrev || !coachNext) return;
+    coachPrev.style.visibility = current === 0 ? "hidden" : "visible";
+    coachNext.style.visibility = current === total - 1 ? "hidden" : "visible";
+  };
+
+  const moveTo = (index, animate = true) => {
+    if (index < 0 || index >= total) return;
+    current = index;
+    const offset = frames[current].offsetLeft;
+    coachTrack.style.transition = animate
+      ? "transform 500ms cubic-bezier(0.16, 1, 0.3, 1)"
+      : "none";
+    coachTrack.style.transform = `translateX(-${offset}px)`;
+    updateButtons();
+  };
+
+  coachTrack.addEventListener("transitionend", () => {
+    isAnimating = false;
+  });
+
+  const goNext = () => {
+    if (isAnimating || current >= total - 1) return;
+    isAnimating = true;
+    moveTo(current + 1);
+  };
+
+  const goPrev = () => {
+    if (isAnimating || current <= 0) return;
+    isAnimating = true;
+    moveTo(current - 1);
+  };
+
+  if (coachPrev) coachPrev.addEventListener("click", goPrev);
+  if (coachNext) coachNext.addEventListener("click", goNext);
+
+  // Свайп
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let isSwiping = false;
+  const coachContainer = coachTrack.parentElement;
+
+  coachContainer.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    isSwiping = false;
+  }, { passive: true });
+
+  coachContainer.addEventListener("touchmove", (e) => {
+    const dx = Math.abs(e.touches[0].clientX - touchStartX);
+    const dy = Math.abs(e.touches[0].clientY - touchStartY);
+    if (!isSwiping && dx > dy && dx > 8) isSwiping = true;
+    if (isSwiping) e.preventDefault();
+  }, { passive: false });
+
+  coachContainer.addEventListener("touchend", (e) => {
+    if (!isSwiping) return;
+    isSwiping = false;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (dx < -40) goNext();
+    else if (dx > 40) goPrev();
+  });
+
+  window.addEventListener("resize", () => {
+    isAnimating = false;
+    moveTo(current, false);
+  });
+
+  moveTo(0, false);
+}
+
+// --- Hotel слайдер ---
+const hotelTrack = document.querySelector(".hotel__track");
+const hotelPrev = document.querySelector(".hotel__edge--prev");
+const hotelNext = document.querySelector(".hotel__edge--next");
+
+if (hotelTrack) {
+  const frames = Array.from(hotelTrack.querySelectorAll(".hotel__frame"));
+  const total = frames.length;
+  let current = 0;
+  let isAnimating = false;
+
+  const updateButtons = () => {
+    if (!hotelPrev || !hotelNext) return;
+    hotelPrev.style.visibility = current === 0 ? "hidden" : "visible";
+    hotelNext.style.visibility = current === total - 1 ? "hidden" : "visible";
+  };
+
+  const moveTo = (index, animate = true) => {
+    if (index < 0 || index >= total) return;
+    current = index;
+    const offset = frames[current].offsetLeft;
+    hotelTrack.style.transition = animate
+      ? "transform 500ms cubic-bezier(0.16, 1, 0.3, 1)"
+      : "none";
+    hotelTrack.style.transform = `translateX(-${offset}px)`;
+    updateButtons();
+  };
+
+  hotelTrack.addEventListener("transitionend", () => {
+    isAnimating = false;
+  });
+
+  const goNext = () => {
+    if (isAnimating || current >= total - 1) return;
+    isAnimating = true;
+    moveTo(current + 1);
+  };
+
+  const goPrev = () => {
+    if (isAnimating || current <= 0) return;
+    isAnimating = true;
+    moveTo(current - 1);
+  };
+
+  if (hotelPrev) hotelPrev.addEventListener("click", goPrev);
+  if (hotelNext) hotelNext.addEventListener("click", goNext);
+
+  // Свайп
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let isSwiping = false;
+  const hotelContainer = hotelTrack.parentElement;
+
+  hotelContainer.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    isSwiping = false;
+  }, { passive: true });
+
+  hotelContainer.addEventListener("touchmove", (e) => {
+    const dx = Math.abs(e.touches[0].clientX - touchStartX);
+    const dy = Math.abs(e.touches[0].clientY - touchStartY);
+    if (!isSwiping && dx > dy && dx > 8) isSwiping = true;
+    if (isSwiping) e.preventDefault();
+  }, { passive: false });
+
+  hotelContainer.addEventListener("touchend", (e) => {
+    if (!isSwiping) return;
+    isSwiping = false;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (dx < -40) goNext();
+    else if (dx > 40) goPrev();
+  });
+
+  window.addEventListener("resize", () => {
+    isAnimating = false;
+    moveTo(current, false);
+  });
+
+  moveTo(0, false);
+}
+
+// --- Levels слайдер ---
+const levelsTrack = document.querySelector(".levels__track");
+const levelsPrev = document.querySelector(".levels__edge--prev");
+const levelsNext = document.querySelector(".levels__edge--next");
+
+if (levelsTrack) {
+  const frames = Array.from(levelsTrack.querySelectorAll(".levels__frame"));
+  const total = frames.length;
+  let current = 0;
+  let isAnimating = false;
+
+  const isDesktop = () => window.innerWidth >= 768;
+
+  const updateButtons = () => {
+    if (!levelsPrev || !levelsNext) return;
+    if (isDesktop()) {
+      levelsPrev.style.visibility = "hidden";
+      levelsNext.style.visibility = "hidden";
+      return;
+    }
+    levelsPrev.style.visibility = current === 0 ? "hidden" : "visible";
+    levelsNext.style.visibility = current === total - 1 ? "hidden" : "visible";
+  };
+
+  const moveTo = (index, animate = true) => {
+    if (isDesktop()) {
+      levelsTrack.style.transition = "none";
+      levelsTrack.style.transform = "translateX(0)";
+      updateButtons();
+      return;
+    }
+    if (index < 0 || index >= total) return;
+    current = index;
+    const offset = frames[current].offsetLeft;
+    levelsTrack.style.transition = animate
+      ? "transform 500ms cubic-bezier(0.16, 1, 0.3, 1)"
+      : "none";
+    levelsTrack.style.transform = `translateX(-${offset}px)`;
+    updateButtons();
+  };
+
+  levelsTrack.addEventListener("transitionend", () => {
+    isAnimating = false;
+  });
+
+  const goNext = () => {
+    if (isDesktop() || isAnimating || current >= total - 1) return;
+    isAnimating = true;
+    moveTo(current + 1);
+  };
+
+  const goPrev = () => {
+    if (isDesktop() || isAnimating || current <= 0) return;
+    isAnimating = true;
+    moveTo(current - 1);
+  };
+
+  if (levelsPrev) levelsPrev.addEventListener("click", goPrev);
+  if (levelsNext) levelsNext.addEventListener("click", goNext);
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let isSwiping = false;
+  const levelsContainer = levelsTrack.parentElement;
+
+  levelsContainer.addEventListener("touchstart", (e) => {
+    if (isDesktop()) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    isSwiping = false;
+  }, { passive: true });
+
+  levelsContainer.addEventListener("touchmove", (e) => {
+    if (isDesktop()) return;
+    const dx = Math.abs(e.touches[0].clientX - touchStartX);
+    const dy = Math.abs(e.touches[0].clientY - touchStartY);
+    if (!isSwiping && dx > dy && dx > 8) isSwiping = true;
+    if (isSwiping) e.preventDefault();
+  }, { passive: false });
+
+  levelsContainer.addEventListener("touchend", (e) => {
+    if (isDesktop() || !isSwiping) return;
+    isSwiping = false;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (dx < -40) goNext();
+    else if (dx > 40) goPrev();
+  });
+
+  window.addEventListener("resize", () => {
+    isAnimating = false;
+    current = 0;
+    moveTo(0, false);
+  });
+
+  moveTo(0, false);
+}
+
+// --- Pack слайдер ---
+const packTrack = document.querySelector(".pack__track");
+const packPrev = document.querySelector(".pack__edge--prev");
+const packNext = document.querySelector(".pack__edge--next");
+
+if (packTrack) {
+    const slides = Array.from(packTrack.querySelectorAll(".pack__slide"));
+    const total = slides.length;
+    let current = 0;
+    let isAnimating = false;
+
+    const isDesktop = () => window.innerWidth >= 768;
+
+    const updateButtons = () => {
+        if (!packPrev || !packNext) return;
+        if (isDesktop()) {
+            packPrev.style.visibility = "hidden";
+            packNext.style.visibility = "hidden";
+            return;
+        }
+        packPrev.style.visibility = current === 0 ? "hidden" : "visible";
+        packNext.style.visibility = current === total - 1 ? "hidden" : "visible";
     };
 
     const moveTo = (index, animate = true) => {
-        if (!animate) travelTrack.classList.add("is-resetting");
-        const offset = index * getFrameWidth();
-        travelTrack.style.transform = `translateX(-${offset}px)`;
-        if (!animate) {
-            requestAnimationFrame(() => requestAnimationFrame(() => {
-                travelTrack.classList.remove("is-resetting");
-            }));
+        if (isDesktop()) {
+            packTrack.style.transition = "none";
+            packTrack.style.transform = "translateX(0)";
+            updateButtons();
+            return;
         }
+        if (index < 0 || index >= total) return;
+        current = index;
+        const offset = slides[current].offsetLeft;
+        packTrack.style.transition = animate
+            ? "transform 500ms cubic-bezier(0.16, 1, 0.3, 1)"
+            : "none";
+        packTrack.style.transform = `translateX(-${offset}px)`;
+        updateButtons();
     };
 
+    packTrack.addEventListener("transitionend", () => {
+        isAnimating = false;
+    });
+
     const goNext = () => {
-        if (current < total - 1) {
-            current++;
-            moveTo(current);
-        }
+        if (isDesktop() || isAnimating || current >= total - 1) return;
+        isAnimating = true;
+        moveTo(current + 1);
     };
 
     const goPrev = () => {
-        if (current > 0) {
-            current--;
-            moveTo(current);
-        }
+        if (isDesktop() || isAnimating || current <= 0) return;
+        isAnimating = true;
+        moveTo(current - 1);
     };
 
-    if (travelPrev) travelPrev.addEventListener("click", goPrev);
-    if (travelNext) travelNext.addEventListener("click", goNext);
+    if (packPrev) packPrev.addEventListener("click", goPrev);
+    if (packNext) packNext.addEventListener("click", goNext);
 
-    // Свайп для мобильных
+    // Свайп
     let touchStartX = 0;
     let touchStartY = 0;
-    let isDragging = false;
-    let dragStartX = 0;
-    let dragOffset = 0;
+    let isSwiping = false;
+    const packContainer = packTrack.parentElement;
 
-    travelTrack.addEventListener("touchstart", (e) => {
+    packContainer.addEventListener("touchstart", (e) => {
+        if (isDesktop()) return;
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
-        isDragging = false;
+        isSwiping = false;
     }, { passive: true });
 
-    travelTrack.addEventListener("touchmove", (e) => {
-        const dx = e.touches[0].clientX - touchStartX;
-        const dy = e.touches[0].clientY - touchStartY;
-        if (!isDragging && Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 8) {
-            isDragging = true;
-            travelTrack.classList.add("is-dragging");
-        }
-        if (isDragging) e.preventDefault();
+    packContainer.addEventListener("touchmove", (e) => {
+        if (isDesktop()) return;
+        const dx = Math.abs(e.touches[0].clientX - touchStartX);
+        const dy = Math.abs(e.touches[0].clientY - touchStartY);
+        if (!isSwiping && dx > dy && dx > 8) isSwiping = true;
+        if (isSwiping) e.preventDefault();
     }, { passive: false });
 
-    travelTrack.addEventListener("touchend", (e) => {
-        if (!isDragging) return;
-        travelTrack.classList.remove("is-dragging");
+    packContainer.addEventListener("touchend", (e) => {
+        if (isDesktop() || !isSwiping) return;
+        isSwiping = false;
         const dx = e.changedTouches[0].clientX - touchStartX;
         if (dx < -40) goNext();
         else if (dx > 40) goPrev();
-        else moveTo(current);
-        isDragging = false;
     });
 
-    // Перерасчёт при ресайзе
-    window.addEventListener("resize", () => moveTo(current, false));
+    window.addEventListener("resize", () => {
+        isAnimating = false;
+        current = 0;
+        moveTo(0, false);
+    });
+
+    moveTo(0, false);
 }
+
+// --- FAQ аккордеон ---
+
+const faqItems = document.querySelectorAll(".faq__item");
+
+faqItems.forEach((item) => {
+    const button = item.querySelector(".faq__question");
+
+    button.addEventListener("click", () => {
+
+        const isOpen = item.classList.contains("active");
+
+        faqItems.forEach((faq) => {
+            faq.classList.remove("active");
+        });
+
+        if (!isOpen) {
+            item.classList.add("active");
+        }
+    });
+});
