@@ -253,41 +253,37 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-document
-.getElementById("form")
-
-.addEventListener("submit", async function(e){
-
+document.getElementById("form").addEventListener("submit", async function(e) {
     e.preventDefault();
+    const form = e.target;
 
-    const data = {
+    // Формируем тело запроса как application/x-www-form-urlencoded
+    const formData = new URLSearchParams();
+    formData.append("name", document.getElementById("name").value);
+    formData.append("phone", document.getElementById("tel").value);
+    formData.append("telegram", document.getElementById("tg").value);
+    formData.append("level", document.getElementById("level").value);
+    formData.append("format", document.getElementById("format").value);
+    formData.append("pack", document.getElementById("pack").value);
 
-        name: document.getElementById("name").value,
+    try {
+        const response = await fetch(form.action, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
+        });
 
-        phone: document.getElementById("tel").value,
-
-        telegram: document.getElementById("tg").value,
-
-        level: document.getElementById("level").value,
-
-        format: document.getElementById("format").value,
-
-        pack: document.getElementById("pack").value
-
-    };
-
-    await fetch("https://script.google.com/macros/s/AKfycbwjVLXY4B78bXocaL5slNWHyvXJ4Zezym_vcjhwpaL5rfORLR21vM1pfbVHKAG3USXAWg/exec", {
-
-        method: "POST",
-
-        body: JSON.stringify(data)
-
-    });
-
-    alert("Спасибо! Заявка отправлена.");
-
+        if (!response.ok) throw new Error(`Ошибка сервера: ${response.status}`);
+        const result = await response.json();
+        console.log("Ответ сервера:", result);
+        alert("Спасибо! Заявка отправлена.");
+    } catch (error) {
+        console.error("Ошибка отправки:", error);
+        alert("Произошла ошибка. Попробуйте позже или свяжитесь по телефону.");
+    }
 });
-
 // --- Travel слайдер ---
 const travelTrack = document.querySelector(".travel__track");
 const travelPrev = document.querySelector(".travel__edge--prev");
