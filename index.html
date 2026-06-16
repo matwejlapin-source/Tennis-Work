@@ -282,10 +282,13 @@
         </section>
 
         <section class="timesheet">
-            <picture>
-                <source media="(min-width: 768px)" srcset="img/raspisanie/rasp.webp">
-                <img src="img/raspisanie.webp" alt="">
-            </picture>
+            <div class="timesheet__wrapper">
+                <picture>
+                    <source media="(min-width: 768px)" srcset="img/raspisanie/rasp.webp">
+                    <img src="img/raspisanie.webp" alt="">
+                </picture>
+                <a href="/" class="timesheet__link" aria-label="Перейти"></a>
+            </div>
         </section>
 
         <section class="levels">
@@ -326,7 +329,46 @@
         </section>
 
         <section class="price">
-            <img src="img/price/396.webp" alt="">
+            <div class="price__container">
+                <h2 class="price__title">СТОИМОСТЬ И УСЛОВИЯ</h2>
+                <p class="price__txt">вы приобретаете <strong>тур</strong> и любой <strong>спорт пакет</strong> на
+                    выбор:</p>
+
+                <div class="price__cards">
+
+                    <!-- Зелёная карточка — что входит -->
+                    <div class="price__card price__card--green">
+                        <h3 class="price__card-title">ЧТО ВХОДИТ<br>В СТОИМОСТЬ ТУРА</h3>
+                        <ul class="price__card-list">
+                            <li>Перелёт Москва-Турция-Москва</li>
+                            <li>Проживание в отеле 5★</li>
+                            <li>Питание по системе Ultra All-Inclusive</li>
+                            <li>Страховка</li>
+                            <li>Трансфер</li>
+                        </ul>
+                    </div>
+
+                    <!-- Двухместное -->
+                    <div class="price__card price__card--double">
+                        <div class="price__card-top">
+                            <h3 class="price__card-title">ДВУХМЕСТНОЕ РАЗМЕЩЕНИЕ</h3>
+                            <a href="/" class="price__card-btn">113.000 ₽</a>
+                        </div>
+                        <p class="price__card-desc"><strong>Две односпальные кровати или одна двуспальная</strong> —
+                            если готовы делить номер с другим/другой участником/участницей кэмпа.</p>
+                    </div>
+
+                    <!-- Одноместное -->
+                    <div class="price__card price__card--single">
+                        <div class="price__card-top">
+                            <h3 class="price__card-title"><strong>ОДНОМЕСТНОЕ РАЗМЕЩЕНИЕ</strong></h3>
+                            <a href="/" class="price__card-btn">145.000 ₽</a>
+                        </div>
+                        <p class="price__card-desc">Отдельный номер в отеле.</p>
+                    </div>
+
+                </div>
+            </div>
         </section>
 
 
@@ -361,12 +403,12 @@
                 <button class="pack__edge pack__edge--next" type="button" aria-label="Next"></button>
                 <div class="pack__track">
                     <div class="pack__slide">
-                        <img src="img/pack/1.webp" alt="">
-                        <img src="img/pack/2.webp" alt="">
+                        <a href="/" class="pack__link"><img src="img/pack/1.webp" alt="" ></a>
+                        <a href="/" class="pack__link"><img src="img/pack/2.webp" alt=""></a>
                     </div>
                     <div class="pack__slide">
-                        <img src="img/pack/3.webp" alt="">
-                        <img src="img/pack/4.webp" alt="">
+                        <a href="/" class="pack__link"><img src="img/pack/3.webp" alt=""></a>
+                        <a href="/" class="pack__link"><img src="img/pack/4.webp" alt=""></a>
                     </div>
                 </div>
             </div>
@@ -381,65 +423,74 @@
 
 
         <section class="faq">
-            <h2 class="faq__title">
-                ОТВЕТЫ НА <em>ЧАСТЫЕ ВОПРОСЫ</em>
-            </h2>
+            <h2 class="faq__title">ОТВЕТЫ НА ЧАСТЫЕ<br>ВОПРОСЫ</h2>
 
             <div class="faq__list">
-
-                <div class="faq__item active">
+                <div class="faq__item">
                     <button class="faq__question">
-                        <span>Где расположены корты школы Tennis Go School в Москве?</span>
+                        <span>Чем теннисный кэмп отличается от обычных тренировок?</span>
                         <span class="faq__icon"></span>
                     </button>
-
                     <div class="faq__answer">
                         <div class="faq__answer-content">
-                            <p>
-                                6 локаций в Москве: Сокольники, Лефортово,
-                                Савёловская, Щёлковская, Братиславская и Лужники.
-                            </p>
-
-                            <ul>
-                                <li>Корты с покрытием хард и грунт</li>
-                                <li>Удобная инфраструктура</li>
-                            </ul>
+                            Теннисный кэмп — это формат интенсивных тренировок и отдыха, где вы занимаетесь теннисом
+                            каждый день, участвуете в турнирах и общаетесь с единомышленниками. Это быстрый способ
+                            прокачать уровень игры и перезагрузиться.
                         </div>
                     </div>
                 </div>
 
                 <div class="faq__item">
                     <button class="faq__question">
-                        <span>Какие форматы занятий доступны?</span>
+                        <span>С какого уровня можно участвовать?</span>
                         <span class="faq__icon"></span>
                     </button>
-
                     <div class="faq__answer">
                         <div class="faq__answer-content">
-                            <p>
-                                Индивидуальные, групповые тренировки,
-                                сплит-занятия и турниры выходного дня.
-                            </p>
+                            Теннисные кэмпы подходят для всех уровней — от новичков до продвинутых игроков. Участники
+                            распределяются по группам, чтобы тренировки были максимально эффективными.
                         </div>
                     </div>
                 </div>
 
                 <div class="faq__item">
                     <button class="faq__question">
-                        <span>Можно ли записаться на пробный урок?</span>
+                        <span>Что входит в стоимость?</span>
                         <span class="faq__icon"></span>
                     </button>
-
                     <div class="faq__answer">
                         <div class="faq__answer-content">
-                            <p>
-                                Да. Пробная тренировка включает знакомство
-                                с тренером, оценку уровня подготовки и вводную часть.
-                            </p>
+                            В стоимость теннисного кэмпа входит проживание, тренировки, турнир, развлекательная
+                            программа и организация поездки. Это формат «под ключ», где вы сосредоточены только на игре
+                            и отдыхе.
                         </div>
                     </div>
                 </div>
 
+                <div class="faq__item">
+                    <button class="faq__question">
+                        <span>Где проходят кэмпы?</span>
+                        <span class="faq__icon"></span>
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            Кэмпы проводятся на современных теннисных кортах по всему миру.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq__item">
+                    <button class="faq__question">
+                        <span>Что взять с собой?</span>
+                        <span class="faq__icon"></span>
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            Спортивную форму, удобную обувь, ракетку (если нет, мы предоставим), солнцезащитные
+                            средства, одежду для отдыха. Мы пришлем вам чек-лист «что положить в чемодан» перед вылетом.
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -456,9 +507,11 @@
             </div>
             <div class="footer__right-block">
                 <a class="footer__link" href="">ип</a>
-                <a class="footer__link" href="https://spb.tennis-go-school.ru/polzovatelskoe-soglashenie">пользовательское соглашение</a>
+                <a class="footer__link"
+                    href="https://spb.tennis-go-school.ru/polzovatelskoe-soglashenie">пользовательское соглашение</a>
                 <a class="footer__link" href="https://spb.tennis-go-school.ru/privacy">обработка данных</a>
-                <a class="footer__link" href="https://spb.tennis-go-school.ru/dogovor-publichnoj-oferty">публичная оферта</a>
+                <a class="footer__link" href="https://spb.tennis-go-school.ru/dogovor-publichnoj-oferty">публичная
+                    оферта</a>
             </div>
 
         </div>

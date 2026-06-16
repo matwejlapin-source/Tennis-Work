@@ -579,20 +579,18 @@ if (packTrack) {
         packNext.style.visibility = current === total - 1 ? "hidden" : "visible";
     };
 
-    const moveTo = (index, animate = true) => {
+    const moveToIndex = (index, animate = true) => {
         if (isDesktop()) {
             packTrack.style.transition = "none";
             packTrack.style.transform = "translateX(0)";
             updateButtons();
             return;
         }
-        if (index < 0 || index >= total) return;
-        current = index;
-        const offset = slides[current].offsetLeft;
+        const slideWidth = packTrack.offsetWidth;
         packTrack.style.transition = animate
             ? "transform 500ms cubic-bezier(0.16, 1, 0.3, 1)"
             : "none";
-        packTrack.style.transform = `translateX(-${offset}px)`;
+        packTrack.style.transform = `translateX(-${index * slideWidth}px)`;
         updateButtons();
     };
 
@@ -600,20 +598,19 @@ if (packTrack) {
         isAnimating = false;
     });
 
-    const goNext = () => {
+    if (packNext) packNext.addEventListener("click", () => {
         if (isDesktop() || isAnimating || current >= total - 1) return;
         isAnimating = true;
-        moveTo(current + 1);
-    };
+        current++;
+        moveToIndex(current);
+    });
 
-    const goPrev = () => {
+    if (packPrev) packPrev.addEventListener("click", () => {
         if (isDesktop() || isAnimating || current <= 0) return;
         isAnimating = true;
-        moveTo(current - 1);
-    };
-
-    if (packPrev) packPrev.addEventListener("click", goPrev);
-    if (packNext) packNext.addEventListener("click", goNext);
+        current--;
+        moveToIndex(current);
+    });
 
     // Свайп
     let touchStartX = 0;
@@ -640,36 +637,64 @@ if (packTrack) {
         if (isDesktop() || !isSwiping) return;
         isSwiping = false;
         const dx = e.changedTouches[0].clientX - touchStartX;
-        if (dx < -40) goNext();
-        else if (dx > 40) goPrev();
+        if (dx < -40 && current < total - 1) {
+            isAnimating = true;
+            current++;
+            moveToIndex(current);
+        } else if (dx > 40 && current > 0) {
+            isAnimating = true;
+            current--;
+            moveToIndex(current);
+        }
     });
 
     window.addEventListener("resize", () => {
         isAnimating = false;
         current = 0;
-        moveTo(0, false);
+        moveToIndex(0, false);
     });
 
-    moveTo(0, false);
+    moveToIndex(0, false);
 }
 
 // --- FAQ аккордеон ---
-
 const faqItems = document.querySelectorAll(".faq__item");
 
 faqItems.forEach((item) => {
-    const button = item.querySelector(".faq__question");
+    const answer = item.querySelector(".faq__answer");
+    const content = item.querySelector(".faq__answer-content");
 
-    button.addEventListener("click", () => {
-
+    // Задаём высоту явно через scrollHeight для плавной анимации
+    item.querySelector(".faq__question").addEventListener("click", () => {
         const isOpen = item.classList.contains("active");
 
+        // Закрываем все — плавно через явную высоту
         faqItems.forEach((faq) => {
-            faq.classList.remove("active");
+            if (faq.classList.contains("active")) {
+                const a = faq.querySelector(".faq__answer");
+                // Фиксируем текущую высоту перед закрытием
+                a.style.maxHeight = a.scrollHeight + "px";
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        a.style.maxHeight = "0px";
+                    });
+                });
+                faq.classList.remove("active");
+            }
         });
 
+        // Открываем текущий если был закрыт
         if (!isOpen) {
             item.classList.add("active");
+            const a = item.querySelector(".faq__answer");
+            a.style.maxHeight = a.scrollHeight + "px";
+
+            // После окончания анимации убираем фиксацию
+            a.addEventListener("transitionend", () => {
+                if (item.classList.contains("active")) {
+                    a.style.maxHeight = "none";
+                }
+            }, { once: true });
         }
     });
 });
