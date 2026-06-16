@@ -211,6 +211,83 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMenu();
 });
 
+// --- Модальное окно формы ---
+const formModal = document.getElementById("formModal");
+const formOpenButtons = document.querySelectorAll("[data-open-form]");
+const formCloseButton = formModal?.querySelector(".modal__close");
+
+const openForm = () => {
+  if (!formModal) return;
+  formModal.classList.add("is-open");
+  formModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("form-is-open");
+};
+
+const closeForm = () => {
+  if (!formModal) return;
+  formModal.classList.remove("is-open");
+  formModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("form-is-open");
+};
+
+formOpenButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    openForm();
+  });
+});
+
+if (formCloseButton) {
+  formCloseButton.addEventListener("click", closeForm);
+}
+
+formModal?.addEventListener("click", (event) => {
+  if (event.target === formModal) {
+    closeForm();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && formModal?.classList.contains("is-open")) {
+    closeForm();
+  }
+});
+
+document
+.getElementById("form")
+
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const data = {
+
+        name: document.getElementById("name").value,
+
+        phone: document.getElementById("tel").value,
+
+        telegram: document.getElementById("tg").value,
+
+        level: document.getElementById("level").value,
+
+        format: document.getElementById("format").value,
+
+        pack: document.getElementById("pack").value
+
+    };
+
+    await fetch("https://script.google.com/macros/s/AKfycbwjVLXY4B78bXocaL5slNWHyvXJ4Zezym_vcjhwpaL5rfORLR21vM1pfbVHKAG3USXAWg/exec", {
+
+        method: "POST",
+
+        body: JSON.stringify(data)
+
+    });
+
+    alert("Спасибо! Заявка отправлена.");
+
+});
+
 // --- Travel слайдер ---
 const travelTrack = document.querySelector(".travel__track");
 const travelPrev = document.querySelector(".travel__edge--prev");

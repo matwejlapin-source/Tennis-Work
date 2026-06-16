@@ -30,7 +30,7 @@
                         <a href="/" class="nav__phone-number">+7 968 576 1549</a>
                     </div>
                 </span>
-                <a href="/" class="nav__button">ЗАПИСАТЬСЯ</a>
+                <a href="#form" class="nav__button" data-open-form="true">ЗАПИСАТЬСЯ</a>
                 <div class="nav__menu">
                     <span class="nav__menu-line"></span>
                     <span class="nav__menu-line"></span>
@@ -76,7 +76,7 @@
                         alt="WhatsApp"></a>
             </div>
 
-            <a href="/" class="menu-button">ЗАПИСАТЬСЯ</a>
+            <a href="#form" class="menu-button" data-open-form="true">ЗАПИСАТЬСЯ</a>
         </div>
     </div>
 
@@ -109,7 +109,7 @@
                             <span class="hero__timer-label">Секунд</span>
                         </div>
                     </div>
-                    <a href="/" class="hero__button">забронировать место</a>
+                    <a href="#price" class="hero__button">забронировать место</a>
                 </div>
             </div>
         </section>
@@ -129,7 +129,7 @@
                         <img src="img/prev-racket.svg" alt="">
                         <p>Мини-группы до 4 человек</p>
                     </div>
-                    <a href="/" class="prev__button">Забронировать место</a>
+                    <a href="#form" class="prev__button" data-open-form="true">Забронировать место</a>
                 </div>
                 <img src="img/prev-img.png" alt="" class="prev__right-block">
             </div>
@@ -287,7 +287,7 @@
                     <source media="(min-width: 768px)" srcset="img/raspisanie/rasp.webp">
                     <img src="img/raspisanie.webp" alt="">
                 </picture>
-                <a href="/" class="timesheet__link" aria-label="Перейти"></a>
+                <a href="#form" class="timesheet__link" aria-label="Перейти" data-open-form="true"></a>
             </div>
         </section>
 
@@ -328,7 +328,7 @@
             </div>
         </section>
 
-        <section class="price">
+        <section class="price" id="price">
             <div class="price__container">
                 <h2 class="price__title">СТОИМОСТЬ И УСЛОВИЯ</h2>
                 <p class="price__txt">вы приобретаете <strong>тур</strong> и любой <strong>спорт пакет</strong> на
@@ -352,7 +352,7 @@
                     <div class="price__card price__card--double">
                         <div class="price__card-top">
                             <h3 class="price__card-title">ДВУХМЕСТНОЕ РАЗМЕЩЕНИЕ</h3>
-                            <a href="/" class="price__card-btn">113.000 ₽</a>
+                            <a href="#form" class="price__card-btn" data-open-form="true">113.000 ₽</a>
                         </div>
                         <p class="price__card-desc"><strong>Две односпальные кровати или одна двуспальная</strong> —
                             если готовы делить номер с другим/другой участником/участницей кэмпа.</p>
@@ -362,7 +362,7 @@
                     <div class="price__card price__card--single">
                         <div class="price__card-top">
                             <h3 class="price__card-title"><strong>ОДНОМЕСТНОЕ РАЗМЕЩЕНИЕ</strong></h3>
-                            <a href="/" class="price__card-btn">145.000 ₽</a>
+                            <a href="#form" class="price__card-btn" data-open-form="true">145.000 ₽</a>
                         </div>
                         <p class="price__card-desc">Отдельный номер в отеле.</p>
                     </div>
@@ -403,12 +403,12 @@
                 <button class="pack__edge pack__edge--next" type="button" aria-label="Next"></button>
                 <div class="pack__track">
                     <div class="pack__slide">
-                        <a href="/" class="pack__link"><img src="img/pack/1.webp" alt="" ></a>
-                        <a href="/" class="pack__link"><img src="img/pack/2.webp" alt=""></a>
+                        <a href="#form" class="pack__link" data-open-form="true"><img src="img/pack/1.webp" alt=""></a>
+                        <a href="#form" class="pack__link" data-open-form="true"><img src="img/pack/2.webp" alt=""></a>
                     </div>
                     <div class="pack__slide">
-                        <a href="/" class="pack__link"><img src="img/pack/3.webp" alt=""></a>
-                        <a href="/" class="pack__link"><img src="img/pack/4.webp" alt=""></a>
+                        <a href="#form" class="pack__link" data-open-form="true"><img src="img/pack/3.webp" alt=""></a>
+                        <a href="#form" class="pack__link" data-open-form="true"><img src="img/pack/4.webp" alt=""></a>
                     </div>
                 </div>
             </div>
@@ -416,7 +416,7 @@
 
         <section class="reserv">
             <h2 class="reserv__title">0/36 МЕСТ ЗАНЯТО</h2>
-            <a class="reserv__btn" href="/">ЗАБРОНИРОВАТЬ МЕСТО</a>
+            <a class="reserv__btn" href="#form" data-open-form="true">ЗАБРОНИРОВАТЬ МЕСТО</a>
             <p class="reserv__txt">После заявки мы свяжемся и подробно расскажем все детали без каких‑либо обязательств.
             </p>
         </section>
@@ -493,6 +493,66 @@
                 </div>
             </div>
         </section>
+
+        <div class="modal-overlay" id="formModal" aria-hidden="true">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+                <button type="button" class="modal__close" aria-label="Закрыть форму">✕</button>
+                <img src="img/lovers.svg" alt="" class="modal__logo">
+                <h2 class="modal__title" id="formTitle">Запишитесь на теннисный кэмп</h2>
+
+                <form action="https://script.google.com/macros/s/AKfycbwjVLXY4B78bXocaL5slNWHyvXJ4Zezym_vcjhwpaL5rfORLR21vM1pfbVHKAG3USXAWg/exec" id="form" class="modal__form" method="post">
+                    <div class="modal-field">
+                        <input type="text" name="name" id="name" placeholder="Имя" required>
+                    </div>
+
+                    <div class="modal-field">
+                        <input type="tel" name="tel" id="tel" placeholder="+7 (000) 000-00-00" required>
+                    </div>
+
+                    <div class="modal-field">
+                        <input type="text" name="tg" id="tg" placeholder="Ваш никнейм в telegram для связи" required>
+                    </div>
+
+                    <div class="modal-field">
+                        <select name="level" id="level" required>
+                            <option value="" disabled selected>Уровень игры</option>
+                            <option value="beginer">Начинающий</option>
+                            <option value="mid">Средний</option>
+                            <option value="adv">Продвинутый</option>
+                            <option value="pro">Играющий</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-field">
+                        <select name="format" id="format" required>
+                            <option value="" disabled selected>Формат размещения</option>
+                            <option value="double">Двухместное размещение</option>
+                            <option value="single">Одноместное размещение</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-field">
+                        <select name="pack" id="pack" required>
+                            <option value="" disabled selected>Спортпакет</option>
+                            <option value="tennis">Просто теннис</option>
+                            <option value="tennis+">Теннис+</option>
+                            <option value="opt">Оптимальный</option>
+                            <option value="premium">Премиум</option>
+                            <option value="hz">Затрудняюсь ответить</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-checkbox">
+                        <input type="checkbox" name="checkbox" id="checkbox" required>
+                        <label for="checkbox">При отправке формы вы даете согласие с <a
+                                href="https://tennis-go-school.ru/privacy" target="_blank" rel="noreferrer">политикой
+                                обработки персональных данных</a></label>
+                    </div>
+
+                    <button type="submit" class="modal__submit">Оставить заявку</button>
+                </form>
+            </div>
+        </div>
 
     </main>
 
