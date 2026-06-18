@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <url>
+    <loc>https://campside.tennis-go-school.ru/</loc>
+    <lastmod>2026-06-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+
+    <image:image>
+      <image:loc>https://campside.tennis-go-school.ru/img/hero-bg.webp</image:loc>
+      <image:title>Теннисный кэмп в Турции 2026</image:title>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://campside.tennis-go-school.ru/img/hotel/1.webp</image:loc>
+      <image:title>Starlight Resort Hotel — место проведения кэмпа</image:title>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://campside.tennis-go-school.ru/img/coach/coach_desktop/1.webp</image:loc>
+      <image:title>Тренер теннисного кэмпа</image:title>
+    </image:image>
+
+  </url>
+
+</urlset>
