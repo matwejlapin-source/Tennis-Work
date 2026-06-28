@@ -142,6 +142,32 @@ if (slideTrack && slidePrev && slideNext) {
   };
 
   moveToSlide(currentSlide, false);
+  // Свайп для slide
+const slideContainer = slideTrack.parentElement;
+let slideTouchStartX = 0;
+let slideTouchStartY = 0;
+let slideIsSwiping = false;
+
+slideContainer.addEventListener("touchstart", (e) => {
+    slideTouchStartX = e.touches[0].clientX;
+    slideTouchStartY = e.touches[0].clientY;
+    slideIsSwiping = false;
+}, { passive: true });
+
+slideContainer.addEventListener("touchmove", (e) => {
+    const dx = Math.abs(e.touches[0].clientX - slideTouchStartX);
+    const dy = Math.abs(e.touches[0].clientY - slideTouchStartY);
+    if (!slideIsSwiping && dx > dy && dx > 8) slideIsSwiping = true;
+    if (slideIsSwiping) e.preventDefault();
+}, { passive: false });
+
+slideContainer.addEventListener("touchend", (e) => {
+    if (!slideIsSwiping) return;
+    slideIsSwiping = false;
+    const dx = e.changedTouches[0].clientX - slideTouchStartX;
+    if (dx < -40) goToSlide(1);
+    else if (dx > 40) goToSlide(-1);
+});
   startProgress(0);
 
   slidePrev.addEventListener("click", () => goToSlide(-1));
